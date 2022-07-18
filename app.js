@@ -4,6 +4,9 @@ let statement='';
 $(document).ready(function(){
     $(document).on('keyup',(e)=>{
         let btn = getName(e.keyCode);
+        if(btn === "_"){
+            return;
+        }
         if(btn === "Enter"){
             calc();
             displayButton(ans);
@@ -23,6 +26,9 @@ $(document).ready(function(){
     });
     $('button').on('click',(e)=>{
         let btn = e.target.innerHTML;
+        if(btn === "Undefined"){
+            return;
+        }
         if(btn === "Enter"){
             calc();
             displayButton(ans);
@@ -53,6 +59,7 @@ function getName(value){
     else if(value === 107)return "+";
     else if(value === 109)return "-";
     else if(value === 13)return "Enter";
+    else return "_";
 }
 
 function displayButton(value){

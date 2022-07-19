@@ -1,6 +1,8 @@
 let ans='';
 let statement='';
+let color = {r:'f0',g:'08',b:'08'};
 
+setColor();
 $(document).ready(function(){
     $(document).on('keyup',(e)=>{
         let btn = getName(e.keyCode);
@@ -56,7 +58,27 @@ $(document).ready(function(){
             displayButton(statement);
         }
     });
+
+    $('#red').on('input',(e)=>{
+        color.r = parseInt(e.target.value).toString(16);
+        setColor();
+    });
+    $('#green').on('input',(e)=>{
+        color.g = parseInt(e.target.value).toString(16);
+        setColor();
+    });
+    $('#blue').on('input',(e)=>{
+        color.b = parseInt(e.target.value).toString(16);
+        setColor();
+    });
 });
+
+
+function setColor(){
+    let hex = "#" + color.r + color.g + color.b;
+    console.log(hex);
+    $('.outer-frame').css('background-color',hex);
+}
 
 function getName(value){
     if(value >=48 && value <= 57)return value-48;

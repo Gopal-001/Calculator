@@ -18,6 +18,10 @@ $(document).ready(function(){
             }
             else statement = statement.slice(0,-1);
             displayButton(statement);
+        }else if(btn === "AC"){
+            ans = "0";
+            statement = "0";
+            displayButton(ans);
         }
         else{
             statement = statement + btn;
@@ -26,7 +30,7 @@ $(document).ready(function(){
     });
     $('button').on('click',(e)=>{
         let btn = e.target.innerHTML;
-        if(btn === "Undefined"){
+        if(btn === "Undefined" ){
             return;
         }
         if(btn === "Enter"){
@@ -34,14 +38,18 @@ $(document).ready(function(){
             displayButton(ans);
         }else if(btn === "🔙"){
             if(statement === "")return;
-            else if(ans === 'Invalid Syntax'){
-                statement = "";
-                ans = '';
+            else if(ans === 'Invalid Syntax' || ans === 'Undefined' || ans === 'NaN' || ans === 'Infinity'){
+                statement = "0";
+                ans = '0';
             }
             else{
                 statement = statement.slice(0,-1);
             }
             displayButton(statement);
+        }else if(btn === "AC"){
+            ans = "0";
+            statement = "0";
+            displayButton(ans);
         }
         else{
             statement = statement + btn;
@@ -59,6 +67,8 @@ function getName(value){
     else if(value === 107)return "+";
     else if(value === 109)return "-";
     else if(value === 13)return "Enter";
+    else if(value === 190 || value === 110)return ".";
+    else if(value === 27)return "AC";
     else return "_";
 }
 
@@ -67,14 +77,15 @@ function displayButton(value){
 }
 
 function oper(char){
-    if(char >= "0" && char <="9")return false;
+    if((char >= "0" && char <="9") || char === ".")return false;
     return true;
 }
 
 function calc(){
     let len = statement.length;
-    if(oper(statement[len-1])){
+    if(oper(statement[len-1]) || statement[0] === "*" || statement[0] === "/"){
         ans = 'Invalid Syntax';
+        statement="0";
         return;
     }
     let list=[];
@@ -82,18 +93,38 @@ function calc(){
     for(var i=0;i<len;i++){
         if(i>0 && oper(statement[i]) && oper(statement[i-1])){
             ans = 'Invalid Syntax';
+            statement="0";
             return;
         }
+        console.log(statement[i] + "is ");
         if(oper(statement[i])){
-            list.push(parseInt(cur));
-            cur=0;
-            list.push(statement[i]);
+            let tmp = statement.substring(cur,i);
+            console.log(tmp);
+            console.log("true ");
+            try{
+                tmp = parseFloat(tmp);
+                list.push(tmp);
+                list.push(statement[i]);
+            }catch{
+                ans= 'Invalid Syntax';
+                statement="0";
+                return;
+            }
+            cur = i+1;
         }
-        else{
-            cur = cur*10 + parseInt(statement[i]);
-        }
+        console.log(" false ");
     }
-    list.push(parseInt(cur));
+    try{
+        let tmp = parseFloat(statement.substring(cur,len));
+        list.push(tmp);
+    }catch{
+        ans = 'Invalid Syntax';
+        statement="0";
+        return;
+    }
+
+    console.log(list);
+
     let allFun = ["/","X","+","-"];
     let st=0,cnt=0;
     while(st<4 && cnt<100){
